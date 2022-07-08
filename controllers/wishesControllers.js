@@ -20,8 +20,6 @@ module.exports = {
         } catch (e){
             console.log(e);
         }
-
-		
 	},
 
 	// resetWishes: (req, res) => {
