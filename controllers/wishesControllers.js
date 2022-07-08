@@ -12,10 +12,11 @@ module.exports = {
 	addWishes: async (req, res) => {
 		try{
             const newData = await Wishes.create(req.body);
+			const wishes = await Wishes.findAll();
 
             return res.json({
 				message: "Success Add Wishes",
-				data: newData,
+				data: wishes,
 			});
         } catch (e){
             console.log(e);
