@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { getRsvp, addRsvp, resetRsvp } = require("../controllers/rsvpControllers");
+const { getRsvp, addRsvp } = require("../controllers/rsvpControllers");
 
 router.get("/", getRsvp);
 router.post("/", addRsvp);
-router.delete("/", resetRsvp);
+// router.delete("/", resetRsvp);
 
 module.exports = router;

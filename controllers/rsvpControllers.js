@@ -1,17 +1,9 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
 const { doc } = require("../config/sheets");
-const nopedb = require("nope.db");
-const db = new nopedb({
-	path: "./db/rsvp.json",
-	seperator: ".",
-	spaces: 2,
-});
+const Rsvp = require('../models/rsvpModel');
 
 module.exports = {
-	getRsvp: (req, res) => {
-		let rsvp = db.get("rsvp");
+	getRsvp: async (req, res) => {
+		const rsvp = await Rsvp.findAll();
 		return res.json({
 			message: "Success GET Rsvp",
 			data: rsvp,
@@ -19,27 +11,30 @@ module.exports = {
 	},
 
 	addRsvp: async (req, res) => {
-		db.push("rsvp", req.body);
-		let newData = db.get("rsvp");
+		try{
+			const newData = await Rsvp.create(req.body);
 
-		await doc.loadInfo();
-		const sheet = doc.sheetsByIndex[0];
-		const row = await sheet.addRow({
-			nama: req.body.guestName,
-			count: req.body.guestCount,
-			status: req.body.guestStatus,
-		});
+			await doc.loadInfo();
+			const sheet = doc.sheetsByIndex[0];
+			const row = await sheet.addRow({
+				nama: req.body.guestName,
+				count: req.body.guestCount,
+				status: req.body.guestStatus,
+			});
 
-		return res.json({
-			message: "Success Add Rsvp",
-			data: newData,
-		});
+			return res.json({
+				message: "Success Add Rsvp",
+				data: newData,
+			});
+		} catch (e){
+            console.log(e);
+        }
 	},
 
-	resetRsvp: (req, res) => {
-		db.set("rsvp", []);
-		return res.json({
-			message: "Success Reset Rsvp",
-		});
-	},
+	// resetRsvp: (req, res) => {
+	// 	db.set("rsvp", []);
+	// 	return res.json({
+	// 		message: "Success Reset Rsvp",
+	// 	});
+	// },
 };

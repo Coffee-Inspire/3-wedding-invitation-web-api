@@ -1,34 +1,33 @@
-const express = require("express");
-const app = express();
-const nopedb = require("nope.db");
-const db = new nopedb({
-	path: "./db/wishes.json",
-	seperator: ".",
-	spaces: 2,
-});
+const Wishes = require('../models/wishesModel');
 
 module.exports = {
-	getWishes: (req, res) => {
-		let wishes = db.get("wishes");
+	getWishes: async (req, res) => {
+		const wishes = await Wishes.findAll();
 		return res.json({
 			message: "Success GET Wishes",
 			data: wishes,
 		});
 	},
 
-	addWishes: (req, res) => {
-		db.push("wishes", req.body);
-		let newData = db.get("wishes");
-		return res.json({
-			message: "Success Add Wishes",
-			data: newData,
-		});
+	addWishes: async (req, res) => {
+		try{
+            const newData = await Wishes.create(req.body);
+
+            return res.json({
+				message: "Success Add Wishes",
+				data: newData,
+			});
+        } catch (e){
+            console.log(e);
+        }
+
+		
 	},
 
-	resetWishes: (req, res) => {
-		db.set("wishes", []);
-		return res.json({
-			message: "Success Reset Wishes",
-		});
-	},
+	// resetWishes: (req, res) => {
+	// 	db.set("wishes", []);
+	// 	return res.json({
+	// 		message: "Success Reset Wishes",
+	// 	});
+	// },
 };
