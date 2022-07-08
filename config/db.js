@@ -6,14 +6,14 @@ const host = process.env.DATABASE_HOST || "localhost";
 let sequelize;
 
 if(process.env.DATABASE_URL){
-    sequelize = new Sequelize({
-        use_env_variable: process.env.DATABASE_URL,
+    console.log("here")
+    sequelize = new Sequelize(process.env.DATABASE_URL,{
         dialect: 'postgres',
         dialectOptions: { 
-        ssl: { 
-            require: true,
-            rejectUnauthorized: false
-        }
+            ssl: { 
+                require: true,
+                rejectUnauthorized: false
+            }
         }
     })
 } else {
@@ -25,10 +25,10 @@ if(process.env.DATABASE_URL){
         password: process.env.DATABASE_PASS,
         dialect: 'postgres',
         dialectOptions: { 
-        ssl: { 
-            require: true,
-            rejectUnauthorized: false
-        }
+            ssl: { 
+                require: true,
+                rejectUnauthorized: false
+            }
         }
     })
 }
