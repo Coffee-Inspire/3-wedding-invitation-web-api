@@ -1,5 +1,5 @@
 const { doc } = require("../config/sheets");
-const Rsvp = require('../models/rsvpModel');
+// const Rsvp = require("../models/rsvpModel");
 
 module.exports = {
 	getRsvp: async (req, res) => {
@@ -11,11 +11,11 @@ module.exports = {
 	},
 
 	addRsvp: async (req, res) => {
-		try{
-			const newData = await Rsvp.create(req.body);
+		try {
+			// const newData = await Rsvp.create(req.body);
 
 			await doc.loadInfo();
-			const sheet = doc.sheetsByIndex[0];
+			const sheet = doc.sheetsByIndex["RSVP"];
 			const row = await sheet.addRow({
 				nama: req.body.guestName,
 				count: req.body.guestCount,
@@ -24,11 +24,11 @@ module.exports = {
 
 			return res.json({
 				message: "Success Add Rsvp",
-				data: newData,
+				// data: newData,
 			});
-		} catch (e){
-            console.log(e);
-        }
+		} catch (e) {
+			console.log(e);
+		}
 	},
 
 	// resetRsvp: (req, res) => {

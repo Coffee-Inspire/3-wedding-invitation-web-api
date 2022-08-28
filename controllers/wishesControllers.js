@@ -1,26 +1,55 @@
-const Wishes = require('../models/wishesModel');
+const { doc } = require("../config/sheets");
+// const Wishes = require("../models/wishesModel");
 
 module.exports = {
 	getWishes: async (req, res) => {
-		const wishes = await Wishes.findAll();
+		await doc.loadInfo();
+		const sheet = doc.sheetsByTitle["Wishes"];
+
+		const rows = await sheet.getRows();
+		const wishes = rows.map((item, index) => ({
+			id: index + 1,
+			name: item.name,
+			wish: item.wish,
+		}));
+
 		return res.json({
 			message: "Success GET Wishes",
 			data: wishes,
 		});
+
+		// const wishes = await Wishes.findAll();
+		// return res.json({
+		// 	message: "Success GET Wishes",
+		// 	data: wishes,
+		// });
 	},
 
 	addWishes: async (req, res) => {
-		try{
-            const newData = await Wishes.create(req.body);
-			const wishes = await Wishes.findAll();
+		try {
+			await doc.loadInfo();
+			const sheet = doc.sheetsByTitle["Wishes"];
 
-            return res.json({
+			await sheet.setHeaderRow({ name: "name", wish: "wish" });
+			const row = await sheet.addRow({
+				name: req.body.name,
+				wish: req.body.wish,
+			});
+
+			const rows = await sheet.getRows();
+			const wishes = rows.map((item, index) => ({
+				id: index + 1,
+				name: item.name,
+				wish: item.wish,
+			}));
+
+			return res.json({
 				message: "Success Add Wishes",
 				data: wishes,
 			});
-        } catch (e){
-            console.log(e);
-        }
+		} catch (e) {
+			console.log(e);
+		}
 	},
 
 	// resetWishes: (req, res) => {
