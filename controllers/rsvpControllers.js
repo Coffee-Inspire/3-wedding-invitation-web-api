@@ -15,7 +15,7 @@ module.exports = {
 			// const newData = await Rsvp.create(req.body);
 
 			await doc.loadInfo();
-			const sheet = doc.sheetsByIndex["RSVP"];
+			const sheet = doc.sheetsByTitle["RSVP"];
 			const row = await sheet.addRow({
 				nama: req.body.guestName,
 				count: req.body.guestCount,
